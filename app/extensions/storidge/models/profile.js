@@ -8,6 +8,16 @@ function StoridgeProfileDefaultModel() {
   this.MaxIOPS = 2000;
   this.MinBandwidth = 1;
   this.MaxBandwidth = 100;
+  this.Filesystem = 'btrfs';
+  this.SnapshotEnabled = false;
+  this.SnapshotInterval = 60;
+  this.SnapshotMax = 1;
+  this.EncryptionEnabled = false;
+  this.InterfaceType = 'nfs';
+  this.InterfaceDriver = '';
+  this.InterfaceNetwork = '';
+  this.InterfaceConf = '';
+  this.Labels = [];
 }
 
 function StoridgeProfileListModel(data) {
@@ -41,6 +51,29 @@ function StoridgeCreateProfileRequest(model) {
   this.provision = model.Provisioning;
   this.type = model.Type;
   this.level = model.Redundancy;
+
+  this.snapshot = {
+    enabled: model.SnapshotEnabled
+  };
+  if (model.SnapshotEnabled) {
+    this.snapshot.interval = model.SnapshotInterval;
+    this.snapshot.max = model.SnapshotMax;
+  }
+
+  this.encryption = {
+    enabled: model.EncryptionEnabled
+  };
+
+  this.interface = {
+    type: model.InterfaceType,
+    driver: model.InterfaceDriver,
+    network: model.InterfaceNetwork,
+    conf: model.InterfaceConf
+  };
+
+  // this.Filesystem = data.Filesystem;
+  // this.labels = data.labels;
+
   if (model.MinIOPS && model.MaxIOPS) {
     this.iops = {
       min: model.MinIOPS,
